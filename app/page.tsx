@@ -1,18 +1,27 @@
 import DropdownMenu from "@/components/dropdownMenu";
-import { TglButton } from "@tonglecoding/next-ui-kit";
+import { FaMapPin } from "react-icons/fa";
+import { AiFillAndroid } from "react-icons/ai";
 
 export default function Home() {
   return (
     <div>
       <div className="w-full h-screen flex justify-center items-center">
-        <div style={{ position: "relative", border: "solid 1px red" }}>
-          <TglButton paddingX="12px" bgColor="light" rounded="md">
-            click
-          </TglButton>
-
-          <DropdownMenu />
+        <div className="flex gap-6">
+          {headerNav.map((item, index) => (
+            <DropdownMenu menu={menus} key={index}>
+              {item}
+            </DropdownMenu>
+          ))}
         </div>
       </div>
     </div>
   );
 }
+
+const headerNav = ["header", "slider", "benner", "contents", "footer"];
+
+const menus = [
+  { title: "menu 1", icon: <FaMapPin /> },
+  { title: "menu 2" },
+  { icon: <AiFillAndroid /> },
+];

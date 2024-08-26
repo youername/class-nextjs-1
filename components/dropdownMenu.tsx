@@ -1,41 +1,68 @@
 "use client";
-import React, { useState } from "react";
-import { FaMapPin } from "react-icons/fa";
-import { AiFillAndroid } from "react-icons/ai";
+import React, { ReactNode, useState } from "react";
 
-interface Props {}
+interface Props {
+  children: ReactNode;
+  menu: { title?: string; icon?: JSX.Element }[];
+}
 
-const DropdownMenu: React.FC<Props> = ({}) => {
-  const [showMenu, setShowMenu] = useState();
+const DropdownMenu: React.FC<Props> = ({ children, menu }) => {
+  const [showMenu, setShowMenu] = useState(false);
 
-  if (!showMenu) {
-    return null;
-  }
+  const closeHandle = () => {
+    setShowMenu(false);
+  };
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        backgroundColor: "white",
-        color: "#331",
-        minWidth: "6rem",
-        padding: "4px",
-      }}
-    >
-      {menus.map((item, index) => (
-        <div key={index} className="flex items-center">
-          <div>{item.icon}</div>
-          <div>{item.title}</div>
+    <div>
+      {showMenu && (
+        <div
+          onClick={closeHandle}
+          style={{
+            zIndex: 10,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        />
+      )}
+
+      {/* 상단메뉴 */}
+      <div
+        onClick={() => {
+          setShowMenu(!showMenu);
+        }}
+        style={{ position: "relative" }}
+      >
+        {children}
+      </div>
+      {showMenu && (
+        <div
+          style={{
+            position: "absolute",
+            backgroundColor: "white",
+            color: "#224",
+            minWidth: "6rem",
+            padding: "4px",
+            zIndex: "10",
+          }}
+        >
+          {menu.map((item, index) => (
+            <div
+              onClick={closeHandle}
+              key={index}
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <div>{item.icon}</div>
+              <div>{item.title}</div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 };
 
 export default DropdownMenu;
-
-const menus = [
-  { title: "menu 1", icon: <FaMapPin /> },
-  { title: "menu 2", icon: <AiFillAndroid /> },
-  { title: "menu 3" },
-];
