@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <header className="h-[5rem] border-b">
+          <div className="mx-auto w-[1200px] h-full flex items-center">
+            <div className="mx-8">AI</div>
+            <div className="w-full">
+              <div className="flex justify-center gap-6">
+                {menuItems.map((item, index) => (
+                  <div key={index}>
+                    <Link href={item.url}>{item.title}</Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mx-8">user</div>
+          </div>
+        </header>
+        {children}
+        <footer>footer</footer>
+      </body>
     </html>
   );
 }
+
+const menuItems: { title: string; url: string }[] = [
+  { title: "Education", url: "/content/education" },
+  { title: "Research", url: "/content/research" },
+  { title: "Innovation", url: "/content/innovation" },
+  { title: "Admissions + Aid", url: "/content/admissions-aid" },
+  { title: "Campus", url: "/content/campus" },
+  { title: "Life", url: "/content/life" },
+  { title: "News", url: "/content/news" },
+  { title: "Alumni", url: "/content/alumni" },
+  { title: "About", url: "/content/about" },
+  { title: "Tongle", url: "/content/tongle" },
+];
