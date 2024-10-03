@@ -23,7 +23,7 @@ interface Props {
   rounded?: roundedEnum;
 }
 
-const Button: React.FC<Props> = ({
+export const Button: React.FC<Props> = ({
   children,
   paddingX,
   paddingY,
@@ -46,5 +46,3 @@ const Button: React.FC<Props> = ({
     </div>
   );
 };
-
-export default Button;
