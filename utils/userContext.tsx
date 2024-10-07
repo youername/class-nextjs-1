@@ -39,20 +39,22 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("qid");
       const response = await axios.get("http://localhost:8000/protected", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setUser(response.data);
+      console.log("response.data", response.data);
+
       if (!response.data.id) {
-        localStorage.removeItem("token");
+        // localStorage.removeItem("qid");
         // window.location.reload();
       }
     } catch (error) {
       console.error("Failed to fetch user data:", error);
-      localStorage.removeItem("token");
+      localStorage.removeItem("qid");
       //   window.location.reload();
       // 에러 처리 (401 에러는 인터셉터에서 처리됨)
     }

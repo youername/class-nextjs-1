@@ -1,16 +1,44 @@
 "use client";
 import { UserContext } from "@/utils/userContext";
-import React, { useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
+import Resizer from "react-image-file-resizer";
 
 interface Props {}
 
 const UserInfo: React.FC<Props> = ({}) => {
+  const [resizedImage, setResizedImage] = useState<any>("");
+
   const ctx = useContext(UserContext);
   const [inputData, setInputData] = useState<inputType[]>(fields);
 
   const [title, setTitle] = useState<string>(ctx?.title || "");
 
-  console.log("inputData", inputData);
+  const resizeFile = (file: File) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        300, // 너비
+        300, // 높이
+        "JPEG", // 포맷
+        100, // 품질
+        90, // 회전
+        (uri) => {
+          resolve(uri);
+        },
+        "base64" // 출력 타입
+      );
+    });
+  const handleFileChange = async (event: any) => {
+    const file = event.target.files[0];
+    try {
+      const image = await resizeFile(file);
+      setResizedImage(image);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  console.log("resizedImage", resizedImage);
 
   return (
     <div className="flex flex-col w-full min-h-[calc(100vh-220px)] ">
@@ -35,6 +63,18 @@ const UserInfo: React.FC<Props> = ({}) => {
             </div>
           </div>
         ))}
+        <input type="file" onChange={handleFileChange} accept="image/*" />
+        {resizedImage && (
+          <div className="mb-24">
+            <picture>
+              <img
+                src={resizedImage}
+                alt="Resized preview"
+                style={{ maxWidth: "300px" }}
+              />
+            </picture>
+          </div>
+        )}
       </div>
     </div>
   );

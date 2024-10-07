@@ -8,8 +8,8 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function Login() {
   const router = useRouter();
-  const [email, setEmail] = useState("john2@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isPasswordMarking, setIsPasswordMarking] = useState(true);
 
@@ -22,7 +22,10 @@ export default function Login() {
         email,
         password,
       });
-      localStorage.setItem("token", response.data.token);
+      //   if (typeof window !== "undefined") {
+      localStorage.setItem("qid", response.data.token);
+      //   }
+
       userData?.fetchUser();
       router.push("/");
     } catch (error) {
@@ -45,7 +48,7 @@ export default function Login() {
             <input
               className="w-full border h-[38px] bg-[#fafafa] rounded-sm px-2"
               type="email"
-              value={email}
+              defaultValue={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
             />
@@ -53,7 +56,7 @@ export default function Login() {
               <input
                 className="w-full border h-[38px] bg-[#fafafa] rounded-sm px-2"
                 type={`${isPasswordMarking ? "password" : "text"}`}
-                value={password}
+                defaultValue={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
               />

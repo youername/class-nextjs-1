@@ -12,7 +12,7 @@ const logoutHandle = async () => {
         },
       }
     );
-    localStorage.removeItem("token");
+    localStorage.removeItem("qid");
     window.location.reload();
   } catch (error) {
     console.error("Error logging out", error);
