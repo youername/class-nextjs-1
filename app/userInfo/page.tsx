@@ -1,47 +1,99 @@
 "use client";
 import { UserContext } from "@/utils/userContext";
+import axios from "axios";
 import React, { ChangeEvent, useContext, useState } from "react";
 import Resizer from "react-image-file-resizer";
 
 interface Props {}
 
 const UserInfo: React.FC<Props> = ({}) => {
-  const [resizedImage, setResizedImage] = useState<any>("");
-
+  const [resizedImage, setResizedImage] = useState<string>("");
   const ctx = useContext(UserContext);
   const [inputData, setInputData] = useState<inputType[]>(fields);
-
   const [title, setTitle] = useState<string>(ctx?.title || "");
 
   const resizeFile = (file: File) =>
-    new Promise((resolve) => {
+    new Promise<string>((resolve) => {
       Resizer.imageFileResizer(
         file,
-        300, // 너비
-        300, // 높이
-        "JPEG", // 포맷
-        100, // 품질
-        90, // 회전
+        300,
+        300,
+        "JPEG",
+        100,
+        90,
         (uri) => {
-          resolve(uri);
+          resolve(uri as string);
         },
-        "base64" // 출력 타입
+        "base64"
       );
     });
-  const handleFileChange = async (event: any) => {
-    const file = event.target.files[0];
-    try {
-      const image = await resizeFile(file);
-      setResizedImage(image);
-    } catch (err) {
-      console.log(err);
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const image = await resizeFile(file);
+        setResizedImage(image);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
-  console.log("resizedImage", resizedImage);
+  const handleInputChange = (index: number, value: string) => {
+    setInputData((prevData) =>
+      prevData.map((item, idx) => (idx === index ? { ...item, value } : item))
+    );
+  };
+
+  const handleSubmit = async () => {
+    const formData = inputData.reduce((acc, item) => {
+      acc[item.name] = item.value;
+      return acc;
+    }, {} as Record<string, string>);
+
+    formData.photoBase64 = resizedImage;
+
+    try {
+      const token = localStorage.getItem("qid");
+      const response = await axios.patch(
+        "http://localhost:8000/userUpdate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.data) {
+        throw new Error("Failed to update user info");
+      }
+
+      const result = await response.data;
+      console.log("Update successful:", result);
+      // 성공 메시지를 사용자에게 표시하거나 다른 작업 수행
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error details:", {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          headers: error.response?.headers,
+        });
+
+        // 구체적인 에러 메시지를 사용자에게 표시
+        alert(`Error: ${error.response?.data?.message || error.message}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
 
   return (
-    <div className="flex flex-col w-full min-h-[calc(100vh-220px)] ">
+    <div className="flex flex-col w-full min-h-[calc(100vh-220px)]">
       <div className="text-center text-[2rem] font-extrabold mt-12">
         Information
       </div>
@@ -55,10 +107,7 @@ const UserInfo: React.FC<Props> = ({}) => {
               <input
                 type={input.type}
                 value={input.value}
-                onChange={(e) => {
-                  //home work 배열객체 값 변경
-                  e.currentTarget.value;
-                }}
+                onChange={(e) => handleInputChange(index, e.target.value)}
               />
             </div>
           </div>
@@ -75,6 +124,12 @@ const UserInfo: React.FC<Props> = ({}) => {
             </picture>
           </div>
         )}
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Update Information
+        </button>
       </div>
     </div>
   );
@@ -92,5 +147,5 @@ const fields: inputType[] = [
   { name: "name", type: "text", value: "" },
   { name: "email", type: "email", value: "" },
   { name: "address", type: "text", value: "" },
-  { name: "studentNo.", type: "number", value: "" },
+  { name: "studentNum", type: "number", value: "" },
 ];
