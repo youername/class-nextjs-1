@@ -127,7 +127,7 @@ const UserInfo: React.FC = () => {
           ))}
 
           <input type="file" onChange={handleFileChange} accept="image/*" />
-          {resizedImage && (
+          {resizedImage ? (
             <div className="mb-24">
               <picture>
                 <img
@@ -137,6 +137,14 @@ const UserInfo: React.FC = () => {
                 />
               </picture>
             </div>
+          ) : (
+            <picture>
+              <img
+                src={ctx?.user?.photoBase64}
+                alt="Resized preview"
+                style={{ maxWidth: "300px" }}
+              />
+            </picture>
           )}
           <button
             type="submit"
