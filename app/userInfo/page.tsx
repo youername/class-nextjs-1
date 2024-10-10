@@ -156,19 +156,40 @@ const UserInfo: React.FC = () => {
               />
             </div>
           </div>
-          <input
-            type="file"
-            id="file"
-            onChange={handleFileChange}
-            accept="image/*"
-          />
-          {resizedImage && (
+          {resizedImage ? (
             <div className="">
               <picture>
                 <img src={resizedImage} alt="Resized preview" />
               </picture>
             </div>
+          ) : (
+            <picture>
+              <img src={ctx?.user?.photoBase64} alt="Resized preview" />
+            </picture>
           )}
+          <div className="flex">
+            <label htmlFor="file">
+              <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                프로필 사진변경
+              </div>
+            </label>
+            {resizedImage && (
+              <button
+                className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => setResizedImage("")}
+              >
+                복구
+              </button>
+            )}
+
+            <input
+              style={{ display: "none" }}
+              type="file"
+              id="file"
+              onChange={handleFileChange}
+              accept="image/*"
+            />
+          </div>
           <button
             type="submit"
             className="mt-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
