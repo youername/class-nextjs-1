@@ -8,6 +8,9 @@ type UserType =
       name: string;
       email: string;
       photoUrl: string;
+      address: string;
+      photoBase64: string;
+      studentNum: string;
     }
   | undefined;
 
