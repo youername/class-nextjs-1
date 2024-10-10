@@ -105,50 +105,73 @@ const UserInfo: React.FC = () => {
         <div className="flex flex-col gap-4 justify-center items-center text-slate-800">
           <div className="text-white">사용자정보</div>
 
-          {["name", "address", "photoUrl", "studentNum"].map((field) => (
-            <div key={field}>
-              <div className="flex gap-4">
-                <div className="text-white">
-                  {field === "photoUrl"
-                    ? "URL이미지"
-                    : field === "studentNum"
-                    ? "학생증 번호"
-                    : field}
-                </div>
-                <input
-                  className="text-slate-800 w-[20rem]"
-                  type="text"
-                  name={field}
-                  value={inputData[field as keyof InputDataType] || ""}
-                  onChange={handleInputChange}
-                />
-              </div>
+          <div>
+            <div className="flex gap-4">
+              <div className="text-white">이름</div>
+              <input
+                className="text-slate-800 w-[20rem]"
+                type="text"
+                name="name"
+                value={inputData.name || ""}
+                onChange={handleInputChange}
+              />
             </div>
-          ))}
+          </div>
 
-          <input type="file" onChange={handleFileChange} accept="image/*" />
-          {resizedImage ? (
-            <div className="mb-24">
+          <div>
+            <div className="flex gap-4">
+              <div className="text-white">주소</div>
+              <input
+                className="text-slate-800 w-[20rem]"
+                type="text"
+                name="address"
+                value={inputData.address || ""}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="flex gap-4">
+              <div className="text-white">URL이미지</div>
+              <input
+                className="text-slate-800 w-[20rem]"
+                type="text"
+                name="photoUrl"
+                value={inputData.photoUrl || ""}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="flex gap-4">
+              <div className="text-white">학생증 번호</div>
+              <input
+                className="text-slate-800 w-[20rem]"
+                type="text"
+                name="studentNum"
+                value={inputData.studentNum || ""}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+          <input
+            type="file"
+            id="file"
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+          {resizedImage && (
+            <div className="">
               <picture>
-                <img
-                  src={resizedImage}
-                  alt="Resized preview"
-                  style={{ maxWidth: "300px" }}
-                />
+                <img src={resizedImage} alt="Resized preview" />
               </picture>
             </div>
-          ) : (
-            <picture>
-              <img
-                src={ctx?.user?.photoBase64}
-                alt="Resized preview"
-                style={{ maxWidth: "300px" }}
-              />
-            </picture>
           )}
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="mt-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Update Information
           </button>
