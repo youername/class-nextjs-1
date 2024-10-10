@@ -13,7 +13,8 @@ type InputDataType = {
 };
 
 const UserInfo: React.FC = () => {
-  const [resizedImage, setResizedImage] = useState<string>("");
+  const [resizedImage, setResizedImage] = useState<string>();
+  const [profile, setProfile] = useState<string>();
   const ctx = useContext(UserContext);
   const [inputData, setInputData] = useState<InputDataType>({
     name: "",
@@ -67,6 +68,8 @@ const UserInfo: React.FC = () => {
         }
       );
       if (response.data) {
+        setResizedImage(undefined);
+        setProfile(inputData.photoBase64);
         console.log("Update successful:", response.data);
       } else {
         throw new Error("Failed to update user info");
@@ -85,6 +88,7 @@ const UserInfo: React.FC = () => {
         studentNum: ctx.user.studentNum || "",
         photoBase64: ctx.user.photoBase64 || "",
       });
+      setProfile(ctx.user.photoBase64);
     }
   }, [ctx?.user]);
 
@@ -164,7 +168,7 @@ const UserInfo: React.FC = () => {
             </div>
           ) : (
             <picture>
-              <img src={ctx?.user?.photoBase64} alt="Resized preview" />
+              <img src={profile} alt="profile preview" />
             </picture>
           )}
           <div className="flex">
@@ -176,7 +180,12 @@ const UserInfo: React.FC = () => {
             {resizedImage && (
               <button
                 className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setResizedImage("")}
+                onClick={() =>
+                  setInputData((prev) => ({
+                    ...prev,
+                    photoBase64: profile || "",
+                  }))
+                }
               >
                 복구
               </button>
