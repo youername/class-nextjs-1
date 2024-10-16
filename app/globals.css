@@ -31,3 +31,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.inputfleld {
+  @apply focus:outline-none px-2 py-2 block rounded-md border-gray-300 shadow-md focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50;
+}

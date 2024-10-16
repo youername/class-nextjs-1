@@ -1,22 +1,22 @@
 "use client";
 import resizeFile from "@/utils/resizeFile";
 import { UserContext } from "@/utils/userContext";
+import user from "@/public/user.svg";
 import axios from "axios";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import Image from "next/image";
 
 export enum Gender {
-  None = "",
   MALE = "male",
   FEMALE = "female",
   OTHER = "other",
 }
 type InputDataType = {
   name: string;
-  photoUrl: string;
   address: string;
   studentNum: string;
   photoBase64: string;
-  gender: string;
+  gender: Gender;
 };
 
 const UserInfo: React.FC = () => {
@@ -25,11 +25,10 @@ const UserInfo: React.FC = () => {
   const ctx = useContext(UserContext);
   const [inputData, setInputData] = useState<InputDataType>({
     name: "",
-    photoUrl: "",
     address: "",
     studentNum: "",
     photoBase64: "",
-    gender: "",
+    gender: Gender.MALE,
   });
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -75,11 +74,10 @@ const UserInfo: React.FC = () => {
     if (ctx?.user) {
       setInputData({
         name: ctx.user.name || "",
-        photoUrl: ctx.user.photoUrl || "",
         address: ctx.user.address || "",
         studentNum: ctx.user.studentNum || "",
         photoBase64: ctx.user.photoBase64 || "",
-        gender: ctx.user.gender || "",
+        gender: ctx.user.gender || Gender.MALE,
       });
       setProfile(ctx.user.photoBase64);
     }
@@ -96,19 +94,19 @@ const UserInfo: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-[calc(100vh-220px)]">
+    <div className="bg-white h-screen pt-[130px] text-gray-800 flex flex-col w-full min-h-[calc(100vh-220px)]">
       <div className="text-center text-[2rem] font-extrabold mt-12">
         Information
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 justify-center items-center text-slate-800">
-          <div className="text-white">사용자정보</div>
+        <div className="flex flex-col gap-8 justify-center items-center text-slate-800">
+          <div className="">사용자정보</div>
 
           <div>
             <div className="flex gap-4">
-              <div className="text-white">이름</div>
+              <div className="">이름</div>
               <input
-                className="text-slate-800 w-[20rem]"
+                className="inputfleld text-slate-800 w-[20rem]"
                 type="text"
                 name="name"
                 value={inputData.name || ""}
@@ -116,24 +114,28 @@ const UserInfo: React.FC = () => {
               />
             </div>
           </div>
-          <select
-            id="gender"
-            name="gender"
-            value={inputData.gender}
-            onChange={handleInputChange}
-            className="w-[20rem] mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          >
-            {Object.values(Gender).map((p) => (
-              <option key={p} value={p}>
-                {p.charAt(0).toUpperCase() + p.slice(1)}
-              </option>
-            ))}
-          </select>
+          <div className="flex gap-4">
+            <div className="">성별</div>
+            <select
+              id="gender"
+              name="gender"
+              value={inputData.gender}
+              onChange={handleInputChange}
+              className="w-[20rem] mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              {Object.values(Gender).map((p) => (
+                <option key={p} value={p}>
+                  {p.charAt(0).toUpperCase() + p.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div>
             <div className="flex gap-4">
-              <div className="text-white">주소</div>
+              <div className="">주소</div>
               <input
-                className="text-slate-800 w-[20rem]"
+                className="inputfleld text-slate-800 w-[20rem]"
                 type="text"
                 name="address"
                 value={inputData.address || ""}
@@ -144,22 +146,9 @@ const UserInfo: React.FC = () => {
 
           <div>
             <div className="flex gap-4">
-              <div className="text-white">URL이미지</div>
+              <div className="">학생증 번호</div>
               <input
-                className="text-slate-800 w-[20rem]"
-                type="text"
-                name="photoUrl"
-                value={inputData.photoUrl || ""}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="flex gap-4">
-              <div className="text-white">학생증 번호</div>
-              <input
-                className="text-slate-800 w-[20rem]"
+                className="inputfleld text-slate-800 w-[20rem]"
                 type="text"
                 name="studentNum"
                 value={inputData.studentNum || ""}
@@ -167,23 +156,47 @@ const UserInfo: React.FC = () => {
               />
             </div>
           </div>
-          {resizedImage ? (
-            <div className="">
-              <picture>
-                <img src={resizedImage} alt="Resized preview" />
-              </picture>
-            </div>
-          ) : (
-            <picture>
-              <img src={profile} alt="profile preview" />
-            </picture>
-          )}
-          <div className="flex">
+
+          <div className="flex flex-col justify-center items-center relative">
             <label htmlFor="file">
-              <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                프로필 사진변경
-              </div>
+              <Image
+                src={user}
+                className="rounded-full  my-8  border"
+                style={{
+                  width: "120px",
+                  height: "120px",
+                  backgroundSize: "cover",
+                }}
+                alt=""
+              />
+              {profile && (
+                <div
+                  className="absolute rounded-full border top-[32px]"
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    backgroundImage: `url(${profile})`,
+                    backgroundSize: "cuver",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                />
+              )}
             </label>
+            {profile && !resizedImage && (
+              <button
+                className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => {
+                  setInputData((prev) => ({
+                    ...prev,
+                    photoBase64: "",
+                  }));
+                  setProfile(undefined);
+                }}
+              >
+                삭제
+              </button>
+            )}
             {resizedImage && (
               <button
                 className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
@@ -205,6 +218,20 @@ const UserInfo: React.FC = () => {
               onChange={handleFileChange}
               accept="image/*"
             />
+
+            {resizedImage && (
+              <div
+                className="absolute rounded-full border top-[32px]"
+                style={{
+                  width: "120px",
+                  height: "120px",
+                  backgroundImage: `url(${resizedImage})`,
+                  backgroundSize: "cuver",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                }}
+              />
+            )}
           </div>
           <button
             type="submit"
