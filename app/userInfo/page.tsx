@@ -4,12 +4,19 @@ import axios from "axios";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import Resizer from "react-image-file-resizer";
 
+export enum Gender {
+  None = "",
+  MALE = "male",
+  FEMALE = "female",
+  OTHER = "other",
+}
 type InputDataType = {
   name: string;
   photoUrl: string;
   address: string;
   studentNum: string;
   photoBase64: string;
+  gender: string;
 };
 
 const UserInfo: React.FC = () => {
@@ -22,6 +29,7 @@ const UserInfo: React.FC = () => {
     address: "",
     studentNum: "",
     photoBase64: "",
+    gender: "",
   });
 
   const resizeFile = (file: File): Promise<string> =>
@@ -87,12 +95,15 @@ const UserInfo: React.FC = () => {
         address: ctx.user.address || "",
         studentNum: ctx.user.studentNum || "",
         photoBase64: ctx.user.photoBase64 || "",
+        gender: ctx.user.gender || "",
       });
       setProfile(ctx.user.photoBase64);
     }
   }, [ctx?.user]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setInputData((prevData) => ({
       ...prevData,
@@ -121,7 +132,19 @@ const UserInfo: React.FC = () => {
               />
             </div>
           </div>
-
+          <select
+            id="gender"
+            name="gender"
+            value={inputData.gender}
+            onChange={handleInputChange}
+            className="w-[20rem] mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          >
+            {Object.values(Gender).map((p) => (
+              <option key={p} value={p}>
+                {p.charAt(0).toUpperCase() + p.slice(1)}
+              </option>
+            ))}
+          </select>
           <div>
             <div className="flex gap-4">
               <div className="text-white">주소</div>
