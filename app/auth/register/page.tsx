@@ -12,6 +12,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [photoBase64, setPhotoBase64] = useState("");
   const [message, setMessage] = useState("");
   const [isPasswordMarking, setIsPasswordMarking] = useState(true);
 

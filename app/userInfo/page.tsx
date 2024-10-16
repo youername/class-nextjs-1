@@ -1,8 +1,8 @@
 "use client";
+import resizeFile from "@/utils/resizeFile";
 import { UserContext } from "@/utils/userContext";
 import axios from "axios";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
-import Resizer from "react-image-file-resizer";
 
 export enum Gender {
   None = "",
@@ -31,22 +31,6 @@ const UserInfo: React.FC = () => {
     photoBase64: "",
     gender: "",
   });
-
-  const resizeFile = (file: File): Promise<string> =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        300,
-        300,
-        "JPEG",
-        100,
-        0,
-        (uri) => {
-          resolve(uri as string);
-        },
-        "base64"
-      );
-    });
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
