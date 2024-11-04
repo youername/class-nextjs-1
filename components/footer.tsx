@@ -29,7 +29,7 @@ const Footer: React.FC<Props> = ({}) => {
 
   loof({ rowSize: 3 });
 
-  console.log(ctx?.visitNum);
+  //   console.log(ctx?.visitNum);
 
   return (
     <footer className="flex items-start justify-center gap-8 bg-white text-slate-800 p-8">

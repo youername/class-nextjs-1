@@ -1,15 +1,21 @@
 "use client";
+import resizeFile from "@/utils/resizeFile";
 import { UserContext } from "@/utils/userContext";
 import axios from "axios";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
-import Resizer from "react-image-file-resizer";
+
+export enum Gender {
+  MALE = "male",
+  FEMALE = "female",
+  OTHER = "other",
+}
 
 type InputDataType = {
   name: string;
-  photoUrl: string;
   address: string;
   studentNum: string;
   photoBase64: string;
+  gender: Gender;
 };
 
 const UserInfo: React.FC = () => {
@@ -18,27 +24,11 @@ const UserInfo: React.FC = () => {
   const ctx = useContext(UserContext);
   const [inputData, setInputData] = useState<InputDataType>({
     name: "",
-    photoUrl: "",
     address: "",
     studentNum: "",
     photoBase64: "",
+    gender: Gender.MALE,
   });
-
-  const resizeFile = (file: File): Promise<string> =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        300,
-        300,
-        "JPEG",
-        100,
-        0,
-        (uri) => {
-          resolve(uri as string);
-        },
-        "base64"
-      );
-    });
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -83,16 +73,18 @@ const UserInfo: React.FC = () => {
     if (ctx?.user) {
       setInputData({
         name: ctx.user.name || "",
-        photoUrl: ctx.user.photoUrl || "",
         address: ctx.user.address || "",
         studentNum: ctx.user.studentNum || "",
         photoBase64: ctx.user.photoBase64 || "",
+        gender: ctx.user.gender || Gender.MALE,
       });
       setProfile(ctx.user.photoBase64);
     }
   }, [ctx?.user]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setInputData((prevData) => ({
       ...prevData,
@@ -116,12 +108,38 @@ const UserInfo: React.FC = () => {
                 className="text-slate-800 w-[20rem]"
                 type="text"
                 name="name"
-                value={inputData.name || ""}
+                value={inputData.name}
                 onChange={handleInputChange}
               />
             </div>
           </div>
 
+          <div>
+            <div className="flex gap-4">
+              <div className="text-white">성별</div>
+              <select
+                className="text-slate-800 w-[20rem]"
+                name="gender"
+                value={inputData.gender}
+                onChange={handleInputChange}
+              >
+                {Object.values(Gender).map((item) => (
+                  <option key={item} value={item}>
+                    {item.charAt(0).toUpperCase() + item.slice(1)}
+                  </option>
+                ))}
+                {/* <option key="male" value="male">
+                  남자
+                </option>
+                <option key="female" value="female">
+                  여자
+                </option>
+                <option key="other" value="other">
+                  그 외
+                </option> */}
+              </select>
+            </div>
+          </div>
           <div>
             <div className="flex gap-4">
               <div className="text-white">주소</div>
@@ -129,20 +147,7 @@ const UserInfo: React.FC = () => {
                 className="text-slate-800 w-[20rem]"
                 type="text"
                 name="address"
-                value={inputData.address || ""}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="flex gap-4">
-              <div className="text-white">URL이미지</div>
-              <input
-                className="text-slate-800 w-[20rem]"
-                type="text"
-                name="photoUrl"
-                value={inputData.photoUrl || ""}
+                value={inputData.address}
                 onChange={handleInputChange}
               />
             </div>
@@ -155,7 +160,7 @@ const UserInfo: React.FC = () => {
                 className="text-slate-800 w-[20rem]"
                 type="text"
                 name="studentNum"
-                value={inputData.studentNum || ""}
+                value={inputData.studentNum}
                 onChange={handleInputChange}
               />
             </div>

@@ -1,4 +1,5 @@
 "use client";
+import { Gender } from "@/app/userInfo/page";
 import axios from "axios";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -7,10 +8,10 @@ type UserType =
       id: number;
       name: string;
       email: string;
-      photoUrl: string;
       address: string;
       photoBase64: string;
       studentNum: string;
+      gender: Gender;
     }
   | undefined;
 
@@ -43,17 +44,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem("qid");
-      const response = await axios.get("http://localhost:8000/protected", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUser(response.data);
-      console.log("response.data", response.data);
+      if (token) {
+        const response = await axios.get("http://localhost:8000/protected", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUser(response.data);
+        // console.log("response.data", response.data);
 
-      if (!response.data.id) {
-        // localStorage.removeItem("qid");
-        // window.location.reload();
+        if (!response.data.id) {
+          // localStorage.removeItem("qid");
+          // window.location.reload();
+        }
       }
     } catch (error) {
       console.error("Failed to fetch user data:", error);

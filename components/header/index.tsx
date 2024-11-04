@@ -53,7 +53,7 @@ const Header: React.FC<Props> = ({}) => {
               <Link href="/auth/login" className="font-thin">
                 Sign in
               </Link>
-              <Link href="/auth/register">Sign up</Link>
+              <Link href="/auth/signUp">Sign up</Link>
             </div>
           )}
         </div>
