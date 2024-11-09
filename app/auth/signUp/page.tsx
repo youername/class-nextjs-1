@@ -34,12 +34,15 @@ export default function SignUp() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/register", {
-        name,
-        email,
-        password,
-        photoBase64,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}register`,
+        {
+          name,
+          email,
+          password,
+          photoBase64,
+        }
+      );
       setMessage(response.data.message);
     } catch (error) {
       console.error(error);

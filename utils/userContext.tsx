@@ -45,11 +45,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     try {
       const token = localStorage.getItem("qid");
       if (token) {
-        const response = await axios.get("http://localhost:8000/protected", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}protected`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setUser(response.data);
         // console.log("response.data", response.data);
 

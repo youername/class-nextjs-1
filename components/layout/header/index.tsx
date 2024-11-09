@@ -8,8 +8,8 @@ import HeaderNav from "./headerNav";
 import Hav from "./headerNav";
 import MobileNav from "./mobileNav";
 import { UserContext } from "@/utils/userContext";
-import DropdownMenu, { MenuType } from "../dropdownMenu";
-import Title from "../title";
+import DropdownMenu, { MenuType } from "../../dropdownMenu";
+import Title from "../../title";
 
 interface Props {}
 

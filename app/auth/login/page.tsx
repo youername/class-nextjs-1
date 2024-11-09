@@ -18,10 +18,13 @@ export default function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}login`,
+        {
+          email,
+          password,
+        }
+      );
       //   if (typeof window !== "undefined") {
       localStorage.setItem("qid", response.data.token);
       //   }

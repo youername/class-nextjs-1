@@ -48,7 +48,7 @@ const UserInfo: React.FC = () => {
     try {
       const token = localStorage.getItem("qid");
       const response = await axios.patch(
-        "http://localhost:8000/updateUser",
+        `${process.env.NEXT_PUBLIC_API_URL}updateUser`,
         inputData,
         {
           headers: {

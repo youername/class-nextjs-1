@@ -4,7 +4,7 @@ const logoutHandle = async () => {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      "http://localhost:8000/logout",
+      `${process.env.NEXT_PUBLIC_API_URL}logout`,
       {},
       {
         headers: {

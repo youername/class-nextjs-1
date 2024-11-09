@@ -1,4 +1,9 @@
 "use client";
+import Layout from "@/components/layout";
+import Modal from "@/components/modals/modal";
+import CheckGreen from "@/components/svg/checkGreen";
+import CheckOutline from "@/components/svg/checkOutline";
+import TodosLogo from "@/components/svg/todosLogo";
 import { createTodoFatch } from "@/utils/fatch/createTodoFatch";
 import { doneTodosFatch } from "@/utils/fatch/doneTodoFatch";
 import { removeTodosFatch } from "@/utils/fatch/removeTodoFatch";
@@ -8,7 +13,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaDeleteLeft } from "react-icons/fa6";
 
 const Todos = () => {
+  const [showModal, setShowModal] = useState(false);
   const [newTodoInput, setNewTodoInput] = useState<string>("");
+  const [subTitle, setSubTitle] = useState<string>("");
 
   const [todos, setTodos] = useState<TodoType[]>([]);
 
@@ -19,8 +26,9 @@ const Todos = () => {
       if (newTodo) {
         setTodos([
           ...todos,
-          { id: newTodo.id, title: newTodoInput, isDone: false },
+          { id: newTodo.id, title: newTodoInput, isDone: false, subTitle },
         ]);
+        setShowModal(false);
       }
     }
   };
@@ -51,59 +59,91 @@ const Todos = () => {
     todosFatch({ setTodos });
   }, []);
 
+  useEffect(() => {
+    console.log(newTodoInput);
+  }, [newTodoInput]);
+
   return (
-    <div className="flex flex-col items-center">
-      {/* <div className="m-8 mt-32">
-        <Destructuring array={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
-      </div> */}
-
-      <div className="title text-[5rem] font-extrabold mt-32">Todo</div>
-      <div className="border-red-500">
-        <input
-          type="text"
-          value={newTodoInput}
-          placeholder="여기에 입력하세요"
-          className="text-black text-3xl p-2 max-w-[26rem]"
-          onChange={(e) => setNewTodoInput(e.target.value)}
-        />
-
-        {/* <button
-          className="border bg-white text-black m-2 p-2 rounded-lg"
-          onClick={() => {
-            setInput("");
-          }}
-        >
-          클리어
-        </button> */}
-      </div>
-
-      <button
-        className="border bg-white text-black m-2 p-2 rounded-lg"
-        onClick={addButtonHandle}
-      >
-        할일 추가
-      </button>
-      <div className="text-[2rem]">
-        {todos?.map((item, index) => {
-          return (
-            <div key={index} className="relative">
-              <div
-                onClick={() => doneHandle(item.id)}
-                className={`border w-[25rem] m-4 p-2 cursor-pointer text-white ${
-                  item.isDone && "line-through opacity-50"
-                }`}
-              >
-                {item.title}
+    <Layout mobileFootLess={true}>
+      <div className="w-full flex flex-col items-center ">
+        {/* modal */}
+        {showModal && (
+          <Modal setShowModal={setShowModal}>
+            <div className="w-64 h-64 bg-emerald-600">
+              <div>
+                <label htmlFor="title ">할일</label>
+                <input
+                  onChange={(e) => setNewTodoInput(e.target.value)}
+                  className="text-slate-800"
+                  id="title"
+                  type="text"
+                />
               </div>
-              <FaDeleteLeft
-                onClick={() => deleteHandle(item.id)}
-                className="absolute right-8 top-4"
-              />
+              <div>
+                <label htmlFor="title ">내용</label>
+                <input
+                  onChange={(e) => setSubTitle(e.target.value)}
+                  className="text-slate-800"
+                  id="title"
+                  type="text"
+                />
+              </div>
+              <button onClick={addButtonHandle}>만들기</button>
             </div>
-          );
-        })}
+          </Modal>
+        )}
+
+        <div className="w-full px-12">
+          <div className="max-w-[56rem] flex flex-col items-center mx-auto">
+            {/* mobile */}
+            <div className="w-full lg:hidden text-left m-8">
+              <TodosLogo size={200} />
+            </div>
+            {/* Desktop */}
+            <div className="hidden lg:flex w-full justify-between font-extrabold mt-32 mb-12">
+              <TodosLogo />
+              <div
+                onClick={() => setShowModal(!showModal)}
+                className="inline text-center px-12 py-2 bg-blue-500 text-white text-[1.5rem] font-normal rounded-md"
+              >
+                Add new task
+              </div>
+            </div>
+            <div className="h-[70vh] w-full flex flex-col items-center">
+              <div className="h-full w-full flex items-center">
+                <div className="w-full text-[2rem] flex flex-col gap-4">
+                  {todos?.map((item, index) => {
+                    return (
+                      <div key={index} className="relative">
+                        <div className="absolute top-1/2 -translate-y-1/2 left-5">
+                          {item.isDone ? <CheckGreen size={28} /> : null}
+                        </div>
+                        <div
+                          onClick={() => doneHandle(item.id)}
+                          className={`bg-gray-900 rounded-lg w-full pl-16 py-4 cursor-pointer text-white text-[1.1rem] ${
+                            item.isDone && "line-through text-opacity-30"
+                          }`}
+                        >
+                          {item.title}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="lg:hidden">
+                <div
+                  onClick={() => setShowModal(!showModal)}
+                  className="inline text-center px-12 py-2 bg-blue-500 text-white text-[1.5rem] font-normal rounded-md"
+                >
+                  Add new task
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
@@ -118,10 +158,3 @@ const ex = {
     },
   ],
 };
-
-// const ex = { todos: ["동해물과", "백두산이"] };
-
-// function addText(글자: string) {
-//   console.log("클릭");
-//   todos.push(글자);
-// }

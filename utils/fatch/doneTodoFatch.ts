@@ -10,7 +10,7 @@ export const doneTodosFatch = async ({
   const token = localStorage.getItem("qid");
   if (token) {
     const response = await axios.patch(
-      "http://localhost:8000/updateTodo",
+      `${process.env.NEXT_PUBLIC_API_URL}updateTodo`,
       { id, isDone },
       {
         headers: {

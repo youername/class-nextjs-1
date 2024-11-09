@@ -6,14 +6,16 @@ export const todosFatch = async ({
 }: {
   setTodos: Dispatch<SetStateAction<TodoType[]>>;
 }) => {
-  // http://localhost:8000/getTodos
   const token = localStorage.getItem("qid");
   if (token) {
-    const response = await axios.get("http://localhost:8000/getTodos", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}getTodos`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     setTodos(response.data.todos);
   }
 };
