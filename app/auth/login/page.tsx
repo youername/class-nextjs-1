@@ -8,8 +8,8 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function Login() {
   const router = useRouter();
-  const [email, setEmail] = useState("john2@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isPasswordMarking, setIsPasswordMarking] = useState(true);
 
@@ -18,11 +18,17 @@ export default function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://192.168.0.2:8000/login", {
-        email,
-        password,
-      });
-      localStorage.setItem("token", response.data.token);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}login`,
+        {
+          email,
+          password,
+        }
+      );
+      //   if (typeof window !== "undefined") {
+      localStorage.setItem("qid", response.data.token);
+      //   }
+
       userData?.fetchUser();
       router.push("/");
     } catch (error) {
@@ -45,7 +51,7 @@ export default function Login() {
             <input
               className="w-full border h-[38px] bg-[#fafafa] rounded-sm px-2"
               type="email"
-              value={email}
+              defaultValue={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
             />
@@ -53,7 +59,7 @@ export default function Login() {
               <input
                 className="w-full border h-[38px] bg-[#fafafa] rounded-sm px-2"
                 type={`${isPasswordMarking ? "password" : "text"}`}
-                value={password}
+                defaultValue={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
               />
@@ -83,7 +89,7 @@ export default function Login() {
             <div className="h-[0px] border-b w-full" />
           </div>
           <div className="mx-auto text-center flex flex-col gap-6 my-6 text-sm text-[#385185]">
-            <Link href="/auth/register" className="font-bold">
+            <Link href="/auth/signUp" className="font-bold">
               Sign up
             </Link>
             <div className="text-xs font-medium">Forgot password?</div>

@@ -8,8 +8,8 @@ import HeaderNav from "./headerNav";
 import Hav from "./headerNav";
 import MobileNav from "./mobileNav";
 import { UserContext } from "@/utils/userContext";
-import DropdownMenu, { MenuType } from "../dropdownMenu";
-import Title from "../title";
+import DropdownMenu, { MenuType } from "../../dropdownMenu";
+import Title from "../../title";
 
 interface Props {}
 
@@ -53,7 +53,7 @@ const Header: React.FC<Props> = ({}) => {
               <Link href="/auth/login" className="font-thin">
                 Sign in
               </Link>
-              <Link href="/auth/register">Sign up</Link>
+              <Link href="/auth/signUp">Sign up</Link>
             </div>
           )}
         </div>
