@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <div className="bg-white h-screen pt-[130px] text-gray-800">
       <div className="wrap w-[350px] mx-auto">
-        <div className="border">
+        <div className="border-2">
           <div className="text-[4rem] text-center my-[48px] font-sans">
             Log in
           </div>

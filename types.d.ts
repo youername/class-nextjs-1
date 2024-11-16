@@ -3,4 +3,5 @@ type TodoType = {
   title: string;
   subTitle: string;
   isDone: boolean;
+  color: string;
 };
