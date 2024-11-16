@@ -43,7 +43,7 @@ const Todos = () => {
       const newTodo = await createTodoFatch({
         title: newTodoInput,
         subTitle,
-        color,
+        color: color,
       });
       setNewTodoInput("");
       if (newTodo) {
@@ -53,8 +53,9 @@ const Todos = () => {
             id: newTodo.id,
             title: newTodoInput,
             isDone: false,
+            subTitleVisible: false,
             subTitle,
-            color,
+            color: color,
           },
         ]);
         setShowModal(false);
@@ -73,8 +74,16 @@ const Todos = () => {
     const editTodos = todos.map(
       (todo) => {
         if (todo.id === id) {
-          doneTodosFatch({ id, isDone: !todo.isDone });
-          return { ...todo, isDone: !todo.isDone };
+          doneTodosFatch({
+            id,
+            isDone: !todo.isDone,
+            subTitleVisible: !todo.subTitleVisible,
+          });
+          return {
+            ...todo,
+            isDone: !todo.isDone,
+            subTitleVisible: !todo.subTitleVisible,
+          };
         } else {
           return { ...todo };
         }

@@ -4,4 +4,5 @@ type TodoType = {
   subTitle: string;
   isDone: boolean;
   color: string;
+  subTitleVisible: boolean;
 };
